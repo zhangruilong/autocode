@@ -166,12 +166,12 @@ Ext.onReady(function() {
 		]
 	});
 	${entity.name}grid.region = 'center';
-	${entity.name}store.load();//加载数据
 	${entity.name}store.on("beforeload",function(){ 
 		${entity.name}store.baseParams = {
 				query : Ext.getCmp("query"+${entity.name}action).getValue()
 		}; 
 	});
+	${entity.name}store.load();//加载数据
 	var win = new Ext.Viewport({//只能有一个viewport
 		resizable : true,
 		layout : 'border',
