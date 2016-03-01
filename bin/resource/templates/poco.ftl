@@ -37,7 +37,7 @@ public class ${entity.name}Poco
    /**
     * 实体排序
     */
-   public static final String ORDER = " ${entity.keyColumn.fieldName} ";
+   public static final String ORDER = " ${entity.keyColumn.fieldName} desc ";
    /**
 	 * 要模糊查询字段
 	 */
