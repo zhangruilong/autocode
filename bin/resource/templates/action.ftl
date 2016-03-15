@@ -61,7 +61,7 @@ public class ${entity.name}Action extends BaseAction {
 		queryinfo.setQuery(DAO.getQuerysql(queryinfo.getQuery()));
 		queryinfo.setOrder(${entity.name}Poco.ORDER);
 		cuss = (ArrayList<${entity.name}>) DAO.selAll(queryinfo);
-		FileUtil.expExcel(response,cuss,${entity.name}Poco.CHINESENAME,${entity.name}Poco.KEYCOLUMN,${entity.name}Poco.NAME);
+		FileUtil.expExcel(response,cuss,${entity.name}Poco.CHINESENAME,${entity.name}Poco.NAME);
 	}
 	//导入
 	public void impAll(HttpServletRequest request, HttpServletResponse response){
@@ -69,7 +69,6 @@ public class ${entity.name}Action extends BaseAction {
 		String json = FileUtil.impExcel(fileinfo.getPath(),${entity.name}Poco.FIELDNAME); 
 		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
-			temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
 			result = DAO.insSingle(temp);
 		}
 		responsePW(response, result);

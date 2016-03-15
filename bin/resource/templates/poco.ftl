@@ -22,6 +22,7 @@ public class ${entity.name}Poco
     * 实体中文字段
     */
    public static String[] CHINESENAME = {
+   		"${entity.keyColumn.chineseName}",
 	<#list entity.columns as column>
 	 	"${column.chineseName}",
 	</#list>
@@ -30,6 +31,7 @@ public class ${entity.name}Poco
 	 * 实体英文字段
 	 */
    public static final String[] FIELDNAME = {
+   		"${entity.keyColumn.fieldName}",
 	<#list entity.columns as column>
 	 	"${column.fieldName}",
 	</#list>
