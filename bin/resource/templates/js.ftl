@@ -84,7 +84,7 @@ Ext.onReady(function() {
 				handler : function() {
 					var selections = ${entity.name}grid.getSelectionModel().getSelections();
 					if (selections.length != 1) {
-						Ext.Msg.alert('提示', '请选择一条要修改的记录！', function() {
+						Ext.Msg.alert('提示', '请选择一条数据！', function() {
 						});
 						return;
 					}
@@ -97,7 +97,7 @@ Ext.onReady(function() {
 				handler : function() {
 					var selections = ${entity.name}grid.getSelectionModel().getSelections();
 					if (Ext.isEmpty(selections)) {
-						Ext.Msg.alert('提示', '请选择您要删除的数据！');
+						Ext.Msg.alert('提示', '请至少选择一条数据！');
 						return;
 					}
 					commonDelete(basePath + ${entity.name}action + "?method=delAll",selections,${entity.name}store,${entity.name}keycolumn);
@@ -130,7 +130,7 @@ Ext.onReady(function() {
 				handler : function() {
 					var selections = ${entity.name}grid.getSelectionModel().getSelections();
 					if (selections.length != 1) {
-						Ext.Msg.alert('提示', '请选择一条您要上传附件的数据！', function() {
+						Ext.Msg.alert('提示', '请选择一条数据！', function() {
 						});
 						return;
 					}

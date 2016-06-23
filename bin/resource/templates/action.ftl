@@ -1,14 +1,15 @@
 package ${package}.action;
 
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ${package}.dao.${entity.name}Dao;
 import ${package}.pojo.${entity.name};
 import ${package}.poco.${entity.name}Poco;
 import com.system.tools.CommonConst;
-import com.system.tools.base.BaseAction;
+import com.system.tools.base.BaseActionDao;
 import com.system.tools.pojo.Fileinfo;
 import com.system.tools.pojo.Queryinfo;
 import com.system.tools.util.CommonUtil;
@@ -19,12 +20,25 @@ import com.system.tools.pojo.Pageinfo;
  * ${entity.chineseName} 逻辑层
  *@author ZhangRuiLong
  */
-public class ${entity.name}Action extends BaseAction {
+public class ${entity.name}Action extends BaseActionDao {
 	public String result = CommonConst.FAILURE;
 	public ArrayList<${entity.name}> cuss = null;
-	public ${entity.name}Dao DAO = new ${entity.name}Dao();
-	public java.lang.reflect.Type TYPE = new com.google.gson.reflect.TypeToken<ArrayList<${entity.name}>>() {}.getType();
+	public Type TYPE = new TypeToken<ArrayList<${entity.name}>>() {}.getType();
 	
+	/**
+    * 模糊查询语句
+    * @param query
+    * @return "filedname like '%query%' or ..."
+    */
+    public String getQuerysql(String query) {
+    	if(CommonUtil.isEmpty(query)) return null;
+    	String querysql = "";
+    	String queryfieldname[] = ${entity.name}Poco.QUERYFIELDNAME;
+    	for(int i=0;i<queryfieldname.length;i++){
+    		querysql += queryfieldname[i] + " like '%" + query + "%' or ";
+    	}
+		return querysql.substring(0, querysql.length() - 4);
+	};
 	//将json转换成cuss
 	public void json2cuss(HttpServletRequest request){
 		String json = request.getParameter("json");
@@ -35,8 +49,9 @@ public class ${entity.name}Action extends BaseAction {
 	public void insAll(HttpServletRequest request, HttpServletResponse response){
 		json2cuss(request);
 		for(${entity.name} temp:cuss){
-			temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
-			result = DAO.insSingle(temp);
+			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}()))
+				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
+			result = insSingle(temp);
 		}
 		responsePW(response, result);
 	}
@@ -44,23 +59,25 @@ public class ${entity.name}Action extends BaseAction {
 	public void delAll(HttpServletRequest request, HttpServletResponse response){
 		json2cuss(request);
 		for(${entity.name} temp:cuss){
-			result = DAO.delSingle(temp,${entity.name}Poco.KEYCOLUMN);
+			result = delSingle(temp,${entity.name}Poco.KEYCOLUMN);
 		}
 		responsePW(response, result);
 	}
 	//修改
 	public void updAll(HttpServletRequest request, HttpServletResponse response){
 		json2cuss(request);
-		result = DAO.updSingle(cuss.get(0),${entity.name}Poco.KEYCOLUMN);
+		for(${entity.name} temp:cuss){
+			result = updSingle(temp,${entity.name}Poco.KEYCOLUMN);
+		}
 		responsePW(response, result);
 	}
 	//导出
 	public void expAll(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Queryinfo queryinfo = getQueryinfo(request);
 		queryinfo.setType(${entity.name}.class);
-		queryinfo.setQuery(DAO.getQuerysql(queryinfo.getQuery()));
+		queryinfo.setQuery(getQuerysql(queryinfo.getQuery()));
 		queryinfo.setOrder(${entity.name}Poco.ORDER);
-		cuss = (ArrayList<${entity.name}>) DAO.selAll(queryinfo);
+		cuss = (ArrayList<${entity.name}>) selAll(queryinfo);
 		FileUtil.expExcel(response,cuss,${entity.name}Poco.CHINESENAME,${entity.name}Poco.NAME);
 	}
 	//导入
@@ -69,7 +86,9 @@ public class ${entity.name}Action extends BaseAction {
 		String json = FileUtil.impExcel(fileinfo.getPath(),${entity.name}Poco.FIELDNAME); 
 		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
-			result = DAO.insSingle(temp);
+			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}()))
+				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
+			result = insSingle(temp);
 		}
 		responsePW(response, result);
 	}
@@ -77,9 +96,9 @@ public class ${entity.name}Action extends BaseAction {
 	public void selAll(HttpServletRequest request, HttpServletResponse response){
 		Queryinfo queryinfo = getQueryinfo(request);
 		queryinfo.setType(${entity.name}.class);
-		queryinfo.setQuery(DAO.getQuerysql(queryinfo.getQuery()));
+		queryinfo.setQuery(getQuerysql(queryinfo.getQuery()));
 		queryinfo.setOrder(${entity.name}Poco.ORDER);
-		Pageinfo pageinfo = new Pageinfo(0, DAO.selAll(queryinfo));
+		Pageinfo pageinfo = new Pageinfo(0, selAll(queryinfo));
 		result = CommonConst.GSON.toJson(pageinfo);
 		responsePW(response, result);
 	}
@@ -87,9 +106,9 @@ public class ${entity.name}Action extends BaseAction {
 	public void selQuery(HttpServletRequest request, HttpServletResponse response){
 		Queryinfo queryinfo = getQueryinfo(request);
 		queryinfo.setType(${entity.name}.class);
-		queryinfo.setQuery(DAO.getQuerysql(queryinfo.getQuery()));
+		queryinfo.setQuery(getQuerysql(queryinfo.getQuery()));
 		queryinfo.setOrder(${entity.name}Poco.ORDER);
-		Pageinfo pageinfo = new Pageinfo(DAO.getTotal(queryinfo), DAO.selQuery(queryinfo));
+		Pageinfo pageinfo = new Pageinfo(getTotal(queryinfo), selQuery(queryinfo));
 		result = CommonConst.GSON.toJson(pageinfo);
 		responsePW(response, result);
 	}

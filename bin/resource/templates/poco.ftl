@@ -44,6 +44,7 @@ public class ${entity.name}Poco
 	 * 要模糊查询字段
 	 */
    public static final String[] QUERYFIELDNAME = {
+   		"${entity.keyColumn.fieldName}",
 	<#list entity.columns as column>
 	 	"${column.fieldName}",
 	</#list>
