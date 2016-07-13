@@ -9,36 +9,16 @@ Ext.onReady(function() {
 	        			      ];// 全部字段
 	var ${entity.name}keycolumn = [ '${entity.keyColumn.fieldName}' ];// 主键
 	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selQuery");// 定义${entity.name}store
-	var ${entity.name}sm = new Ext.grid.CheckboxSelectionModel();// grid复选框模式
-	var ${entity.name}cm = new Ext.grid.ColumnModel({// 定义columnModel
-		columns : [ new Ext.grid.RowNumberer(), ${entity.name}sm, {// 改
-			header : '${entity.keyColumn.chineseName}',
-			dataIndex : '${entity.keyColumn.fieldName}',
-			hidden : true
-		}
-	<#list entity.columns as column>
-		, {
-			header : '${column.chineseName}',
-			dataIndex : '${column.fieldName}',
-			align : 'center',
-			width : 80,
-			sortable : true
-		}
-	</#list>
-		]
-	});
-	var ${entity.name}dataForm = new Ext.form.FormPanel({// 定义新增和修改的FormPanel
+	var ${entity.name}dataForm = Ext.create('Ext.form.Panel', {// 定义新增和修改的FormPanel
 		id:'${entity.name}dataForm',
 		labelAlign : 'right',
 		frame : true,
 		layout : 'column',
 		items : [ {
-			items : [ {
-				xtype : 'textfield',
-				id : '${entity.name}${entity.keyColumn.fieldName}',
-				name : '${entity.keyColumn.fieldName}',
-				hidden : true
-			} ]
+			xtype : 'textfield',
+			id : '${entity.name}${entity.keyColumn.fieldName}',
+			name : '${entity.keyColumn.fieldName}',
+			hidden : true
 		}
 		<#list entity.columns as column>
 		, {
@@ -49,8 +29,7 @@ Ext.onReady(function() {
 				fieldLabel : '${column.chineseName}',
 				id : '${entity.name}${column.fieldName}',
 				name : '${column.fieldName}',
-				maxLength : 100,
-				anchor : '95%'
+				maxLength : 100
 			} ]
 		}
 		</#list>
@@ -58,44 +37,55 @@ Ext.onReady(function() {
 	});
 	
 	var ${entity.name}bbar = pagesizebar(${entity.name}store);//定义分页
-	var ${entity.name}grid = new Ext.grid.GridPanel({
+	var ${entity.name}grid =  Ext.create('Ext.grid.Panel', {
 		height : document.documentElement.clientHeight - 4,
 		width : '100%',
 		title : ${entity.name}title,
 		store : ${entity.name}store,
-		stripeRows : true,
-		frame : true,
-		loadMask : {
-			msg : '正在加载表格数据,请稍等...'
-		},
-		cm : ${entity.name}cm,
-		sm : ${entity.name}sm,
 		bbar : ${entity.name}bbar,
+	    selModel: {
+	        type: 'spreadsheet',
+	        checkboxSelect: true
+	     },
+		columns : [{// 改
+			header : '${entity.keyColumn.chineseName}',
+			dataIndex : '${entity.keyColumn.fieldName}',
+			hidden : true
+		}
+	<#list entity.columns as column>
+		, {
+			header : '${column.chineseName}',
+			dataIndex : '${column.fieldName}',
+			flex: 1,
+			sortable : true
+		}
+	</#list>
+		],
 		tbar : [{
 				text : "新增",
 				iconCls : 'add',
 				handler : function() {
 					${entity.name}dataForm.form.reset();
-					createWindow(basePath + ${entity.name}action + "?method=insAll", "新增", ${entity.name}dataForm, ${entity.name}store);
+					createTextWindow(basePath + ${entity.name}action + "?method=insAll", "新增", ${entity.name}dataForm, ${entity.name}store);
 				}
 			},'-',{
 				text : "修改",
 				iconCls : 'edit',
 				handler : function() {
-					var selections = ${entity.name}grid.getSelectionModel().getSelections();
+					var selections = ${entity.name}grid.getSelection();
 					if (selections.length != 1) {
 						Ext.Msg.alert('提示', '请选择一条数据！', function() {
 						});
 						return;
 					}
-					createWindow(basePath + ${entity.name}action + "?method=updAll", "修改", ${entity.name}dataForm, ${entity.name}store);
+					createTextWindow(basePath + ${entity.name}action + "?method=updAll", "修改", ${entity.name}dataForm, ${entity.name}store);
 					${entity.name}dataForm.form.loadRecord(selections[0]);
 				}
 			},'-',{
 				text : "删除",
 				iconCls : 'delete',
 				handler : function() {
-					var selections = ${entity.name}grid.getSelectionModel().getSelections();
+					var selections = ${entity.name}grid.getSelection();
 					if (Ext.isEmpty(selections)) {
 						Ext.Msg.alert('提示', '请至少选择一条数据！');
 						return;
@@ -128,7 +118,7 @@ Ext.onReady(function() {
 				text : "附件",
 				iconCls : 'attach',
 				handler : function() {
-					var selections = ${entity.name}grid.getSelectionModel().getSelections();
+					var selections = ${entity.name}grid.getSelection();
 					if (selections.length != 1) {
 						Ext.Msg.alert('提示', '请选择一条数据！', function() {
 						});
@@ -142,7 +132,7 @@ Ext.onReady(function() {
 				}
 			},'->',{
 				xtype : 'textfield',
-				id : 'query'+${entity.name}action,
+				id : 'query${entity.name}action',
 				name : 'query',
 				emptyText : '模糊匹配',
 				width : 100,
@@ -150,12 +140,12 @@ Ext.onReady(function() {
 				listeners : {
 					specialkey : function(field, e) {
 						if (e.getKey() == Ext.EventObject.ENTER) {
-							if ("" == Ext.getCmp("query"+${entity.name}action).getValue()) {
+							if ("" == Ext.getCmp("query${entity.name}action").getValue()) {
 								${entity.name}store.load();
 							} else {
 								${entity.name}store.load({
 									params : {
-										query : Ext.getCmp("query"+${entity.name}action).getValue()
+										query : Ext.getCmp("query${entity.name}action").getValue()
 									}
 								});
 							}
@@ -168,7 +158,7 @@ Ext.onReady(function() {
 	${entity.name}grid.region = 'center';
 	${entity.name}store.on("beforeload",function(){ 
 		${entity.name}store.baseParams = {
-				query : Ext.getCmp("query"+${entity.name}action).getValue()
+				query : Ext.getCmp("query${entity.name}action").getValue()
 		}; 
 	});
 	${entity.name}store.load();//加载数据
