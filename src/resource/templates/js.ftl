@@ -15,10 +15,15 @@ Ext.onReady(function() {
 		frame : true,
 		layout : 'column',
 		items : [ {
-			xtype : 'textfield',
-			id : '${entity.name}${entity.keyColumn.fieldName}',
-			name : '${entity.keyColumn.fieldName}',
-			hidden : true
+			columnWidth : 1,
+			layout : 'form',
+			items : [ {
+				xtype : 'textfield',
+				fieldLabel : '${entity.keyColumn.chineseName}',
+				id : '${entity.name}${entity.keyColumn.fieldName}',
+				name : '${entity.keyColumn.fieldName}',
+				maxLength : 100
+			} ]
 		}
 		<#list entity.columns as column>
 		, {
@@ -47,17 +52,27 @@ Ext.onReady(function() {
 	        type: 'spreadsheet',
 	        checkboxSelect: true
 	     },
+	     plugins: {
+	         ptype: 'cellediting',
+	         clicksToEdit: 1
+	     },
 		columns : [{// 改
 			header : '${entity.keyColumn.chineseName}',
 			dataIndex : '${entity.keyColumn.fieldName}',
-			hidden : true
+			sortable : true, 
+			editor: {
+                xtype: 'textfield',
+                editable: false
+            }
 		}
 	<#list entity.columns as column>
 		, {
 			header : '${column.chineseName}',
 			dataIndex : '${column.fieldName}',
-			flex: 1,
-			sortable : true
+			sortable : true,  
+			editor: {
+                xtype: 'textfield'
+            }
 		}
 	</#list>
 		],
@@ -66,7 +81,19 @@ Ext.onReady(function() {
 				iconCls : 'add',
 				handler : function() {
 					${entity.name}dataForm.form.reset();
+					Ext.getCmp("${entity.name}${entity.keyColumn.fieldName}").setEditable (true);
 					createTextWindow(basePath + ${entity.name}action + "?method=insAll", "新增", ${entity.name}dataForm, ${entity.name}store);
+				}
+			},'-',{
+				text : "保存",
+				iconCls : 'ok',
+				handler : function() {
+					var selections = ${entity.name}grid.getSelection();
+					if (Ext.isEmpty(selections)) {
+						Ext.Msg.alert('提示', '请至少选择一条数据！');
+						return;
+					}
+					commonSave(basePath + ${entity.name}action + "?method=updAll",selections);
 				}
 			},'-',{
 				text : "修改",
@@ -78,6 +105,8 @@ Ext.onReady(function() {
 						});
 						return;
 					}
+					${entity.name}dataForm.form.reset();
+					Ext.getCmp("${entity.name}${entity.keyColumn.fieldName}").setEditable (false);
 					createTextWindow(basePath + ${entity.name}action + "?method=updAll", "修改", ${entity.name}dataForm, ${entity.name}store);
 					${entity.name}dataForm.form.loadRecord(selections[0]);
 				}
