@@ -118,7 +118,10 @@ public class Main extends JFrame implements ActionListener
 		generator.create("poco","poco","Poco.java","poco.ftl");
 		generator.create("pojo","pojo",".java","pojo.ftl");
 		generator.create("dao","dao","Dao.java","dao.ftl");
-		generator.create("action","action","Action.java","action.ftl");
+		if("0".equals(this.dbName.getText()))
+			generator.create("action","action","Action.java","action.ftl");
+		else
+			generator.create("action","action","Action.java","viewaction.ftl");
 		generator.create("pages","pages",".jsp","jsp.ftl");
 		generator.create("pages","pages",".js","js.ftl");
 	}
