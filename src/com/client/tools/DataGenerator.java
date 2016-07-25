@@ -48,8 +48,13 @@ public class DataGenerator
 			Class.forName(this.dictionaryPath);
 			con = DriverManager.getConnection(this.dbConnectionString, this.userName, this.password);
 			//con = DriverManager.getConnection(this.dbConnectionString, "root", "x5");
-			String sqltables = "select b.* from all_tables a left join user_tab_comments b on a.table_name = b.table_name" +
-					" where owner='" + this.dbName + "'";
+			String sqltables = "";
+			if("0".equals(this.dbName))
+				sqltables = "select b.* from all_tables a left join user_tab_comments b on a.table_name = b.table_name" +
+					" where owner='" + this.userName + "'";
+			else
+				sqltables = "select b.* from all_views a left join user_tab_comments b on a.view_name = b.table_name" +
+						" where owner='" + this.userName + "'";
 			statement = con.prepareStatement(sqltables);
 			//statement = con.prepareStatement("select table_name from tables where TABLE_SCHEMA='" + this.dbName + "'");
 			ResultSet set = statement.executeQuery();
@@ -70,7 +75,7 @@ public class DataGenerator
 									" on a.table_name = b.table_name and a.column_name = b.column_name " +
 									" left join user_cons_columns c "+
 									" on a.table_name = c.table_name and a.column_name = c.column_name and c.position is not null "+
-									" where a.table_name = upper('" + tableName + "') and b.owner=upper('" + this.dbName + "') order by b.COLUMN_ID ";
+									" where a.table_name = upper('" + tableName + "') and b.owner=upper('" + this.userName + "') order by b.COLUMN_ID ";
 				statement = con.prepareStatement(sqlcolums);
 				ResultSet set2 = statement.executeQuery();
 				List<Column> columns = new ArrayList<Column>();

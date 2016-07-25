@@ -94,7 +94,7 @@ public class Main extends JFrame implements ActionListener
 		this.packageField.setText("com.server");
 		//this.connectionField.setText("jdbc:oracle:thin:@192.168.70.17:1521:WIGDBRD");
 		this.connectionField.setText("jdbc:oracle:thin:@127.0.0.1:1521:WIGDBRD");
-		this.dbName.setText("ZRLDEMO");
+		this.dbName.setText("0");
 		this.userName.setText("ZRLDEMO");
 		this.password.setText("ZRLDEMO");
 		this.dict.setText("oracle.jdbc.driver.OracleDriver");
