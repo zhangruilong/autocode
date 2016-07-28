@@ -49,14 +49,14 @@ Ext.onReady(function() {
 		store : ${entity.name}store,
 		bbar : ${entity.name}bbar,
 	    selModel: {
-	        type: 'spreadsheet',
-	        checkboxSelect: true
-	     },
-	     plugins: {
+	        type: 'checkboxmodel'
+	    },
+	    plugins: {
 	         ptype: 'cellediting',
 	         clicksToEdit: 1
-	     },
-		columns : [{// 改
+	    },
+		columns : [{xtype: 'rownumberer',width:36}, 
+		{// 改
 			header : '${entity.keyColumn.chineseName}',
 			dataIndex : '${entity.keyColumn.fieldName}',
 			sortable : true, 
