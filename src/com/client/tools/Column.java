@@ -145,7 +145,7 @@ public class Column
 		String columnType = this.column_type;
 		if (columnType.startsWith("number"))
 		{
-			return "int";
+			return "Integer";
 		}
 		else if (columnType.startsWith("nvarchar2")|| columnType.startsWith("varchar2")|| columnType.startsWith("char"))
 		{
@@ -155,17 +155,17 @@ public class Column
 		{
 			return "Date";
 		}
-		else if (columnType.startsWith("binary_float"))
+		else if (columnType.startsWith("float"))
 		{
-			return "float";
+			return "Float";
 		}
-		else if (columnType.startsWith("binary_double"))
+		else if (columnType.startsWith("double"))
 		{
-			return "double";
+			return "Double";
 		}
 		else if (columnType.startsWith("long"))
 		{
-			return "long";
+			return "Long";
 		}
 		return "String";
 				

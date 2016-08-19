@@ -61,7 +61,7 @@ Ext.onReady(function() {
 			header : '${entity.keyColumn.chineseName}',
 			dataIndex : '${entity.keyColumn.fieldName}',
 			sortable : true, 
-			minWidth:100,
+			minWidth: 80,
 			editor: {
                 xtype: 'textfield',
                 editable: false
@@ -72,7 +72,7 @@ Ext.onReady(function() {
 			header : '${column.chineseName}',
 			dataIndex : '${column.fieldName}',
 			sortable : true,  
-			minWidth:100,
+			minWidth: 80,
 			editor: {
                 xtype: 'textfield'
             }
