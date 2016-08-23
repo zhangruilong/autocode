@@ -39,39 +39,6 @@ public class ${entity.name}Action extends BaseActionDao {
     	}
 		return querysql.substring(0, querysql.length() - 4);
 	};
-	//新增
-	public void insAll(HttpServletRequest request, HttpServletResponse response){
-		String json = request.getParameter("json");
-		System.out.println("json : " + json);
-		json = json.replace("\"\"", "null");
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
-		for(${entity.name} temp:cuss){
-			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}()))
-				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
-			result = insSingle(temp);
-		}
-		responsePW(response, result);
-	}
-	//删除
-	public void delAll(HttpServletRequest request, HttpServletResponse response){
-		String json = request.getParameter("json");
-		System.out.println("json : " + json);
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
-		for(${entity.name} temp:cuss){
-			result = delSingle(temp,${entity.name}Poco.KEYCOLUMN);
-		}
-		responsePW(response, result);
-	}
-	//修改
-	public void updAll(HttpServletRequest request, HttpServletResponse response){
-		String json = request.getParameter("json");
-		System.out.println("json : " + json);
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
-		for(${entity.name} temp:cuss){
-			result = updSingle(temp,${entity.name}Poco.KEYCOLUMN);
-		}
-		responsePW(response, result);
-	}
 	//导出
 	public void expAll(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Queryinfo queryinfo = getQueryinfo(request);
@@ -80,18 +47,6 @@ public class ${entity.name}Action extends BaseActionDao {
 		if(CommonUtil.isNull(queryinfo.getOrder())) queryinfo.setOrder(${entity.name}Poco.ORDER);
 		cuss = (ArrayList<${entity.name}>) selAll(queryinfo);
 		FileUtil.expExcel(response,cuss,${entity.name}Poco.CHINESENAME,${entity.name}Poco.NAME);
-	}
-	//导入
-	public void impAll(HttpServletRequest request, HttpServletResponse response){
-		Fileinfo fileinfo = FileUtil.upload(request,0,null,${entity.name}Poco.NAME,"impAll");
-		String json = FileUtil.impExcel(fileinfo.getPath(),${entity.name}Poco.FIELDNAME); 
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
-		for(${entity.name} temp:cuss){
-			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}()))
-				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
-			result = insSingle(temp);
-		}
-		responsePW(response, result);
 	}
 	//查询所有
 	public void selAll(HttpServletRequest request, HttpServletResponse response){

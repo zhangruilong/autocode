@@ -45,7 +45,6 @@ Ext.onReady(function() {
 	var ${entity.name}grid =  Ext.create('Ext.grid.Panel', {
 		height : document.documentElement.clientHeight - 4,
 		width : '100%',
-		forceFit: true,
 		title : ${entity.name}title,
 		store : ${entity.name}store,
 		bbar : ${entity.name}bbar,
@@ -61,7 +60,6 @@ Ext.onReady(function() {
 			header : '${entity.keyColumn.chineseName}',
 			dataIndex : '${entity.keyColumn.fieldName}',
 			sortable : true, 
-			minWidth: 80,
 			editor: {
                 xtype: 'textfield',
                 editable: false
@@ -72,7 +70,6 @@ Ext.onReady(function() {
 			header : '${column.chineseName}',
 			dataIndex : '${column.fieldName}',
 			sortable : true,  
-			minWidth: 80,
 			editor: {
                 xtype: 'textfield'
             }
@@ -169,7 +166,14 @@ Ext.onReady(function() {
 	        					}
 	        					commonAttach(fid, ${entity.name}classify);
 	        				}
-	                    }]
+	                    },{
+	        				text : "筛选",
+    						iconCls : 'select',
+    						handler : function() {
+    							Ext.getCmp("${entity.name}${entity.keyColumn.fieldName}").setEditable (true);
+    							createQueryWindow("筛选", ${entity.name}dataForm, ${entity.name}store);
+    						}
+    					}]
 	                }
 	            }
 			},'->',{
