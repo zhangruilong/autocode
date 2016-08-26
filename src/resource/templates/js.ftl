@@ -8,7 +8,7 @@ Ext.onReady(function() {
 	        			    </#list>
 	        			      ];// 全部字段
 	var ${entity.name}keycolumn = [ '${entity.keyColumn.fieldName}' ];// 主键
-	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selQuery");// 定义${entity.name}store
+	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selAll");// 定义${entity.name}store
 	var ${entity.name}dataForm = Ext.create('Ext.form.Panel', {// 定义新增和修改的FormPanel
 		id:'${entity.name}dataForm',
 		labelAlign : 'right',
@@ -41,13 +41,13 @@ Ext.onReady(function() {
 		]
 	});
 	
-	var ${entity.name}bbar = pagesizebar(${entity.name}store);//定义分页
+	//var ${entity.name}bbar = pagesizebar(${entity.name}store);//定义分页
 	var ${entity.name}grid =  Ext.create('Ext.grid.Panel', {
 		height : document.documentElement.clientHeight - 4,
 		width : '100%',
-		title : ${entity.name}title,
+		//title : ${entity.name}title,
 		store : ${entity.name}store,
-		bbar : ${entity.name}bbar,
+		//bbar : ${entity.name}bbar,
 	    selModel: {
 	        type: 'checkboxmodel'
 	    },
@@ -55,7 +55,7 @@ Ext.onReady(function() {
 	         ptype: 'cellediting',
 	         clicksToEdit: 1
 	    },
-		columns : [{xtype: 'rownumberer',width:36}, 
+		columns : [{xtype: 'rownumberer',width:50}, 
 		{// 改
 			header : '${entity.keyColumn.chineseName}',
 			dataIndex : '${entity.keyColumn.fieldName}',
