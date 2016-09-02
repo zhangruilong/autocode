@@ -135,20 +135,14 @@ Ext.onReady(function() {
 	        					commonImp(basePath + ${entity.name}action + "?method=impAll","导入",${entity.name}store);
 	        				}
 	                    },{
-	                    	text : "后台导出",
+	                    	text : "导出",
 	        				iconCls : 'exp',
 	        				handler : function() {
 	        					Ext.Msg.confirm('请确认', '<b>提示:</b>请确认要导出当前数据？', function(btn, text) {
 	        						if (btn == 'yes') {
-	        							window.location.href = basePath + ${entity.name}action + "?method=expAll"; 
+	        							window.location.href = basePath + ${entity.name}action + "?method=expAll&json="+queryjson+"&query="+Ext.getCmp("query${entity.name}action").getValue(); 
 	        						}
 	        					});
-	        				}
-	                    },{
-	                    	text : "前台导出",
-	        				iconCls : 'exp',
-	        				handler : function() {
-	        					commonExp(${entity.name}grid);
 	        				}
 	                    },{
 	                    	text : "附件",
@@ -171,7 +165,7 @@ Ext.onReady(function() {
     						iconCls : 'select',
     						handler : function() {
     							Ext.getCmp("${entity.name}${entity.keyColumn.fieldName}").setEditable (true);
-    							createQueryWindow("筛选", ${entity.name}dataForm, ${entity.name}store);
+    							createQueryWindow("筛选", ${entity.name}dataForm, ${entity.name}store,Ext.getCmp("query${entity.name}action").getValue());
     						}
     					}]
 	                }
@@ -187,10 +181,15 @@ Ext.onReady(function() {
 					specialkey : function(field, e) {
 						if (e.getKey() == Ext.EventObject.ENTER) {
 							if ("" == Ext.getCmp("query${entity.name}action").getValue()) {
-								${entity.name}store.load();
+								${entity.name}store.load({
+									params : {
+										json : queryjson
+									}
+								});
 							} else {
 								${entity.name}store.load({
 									params : {
+										json : queryjson,
 										query : Ext.getCmp("query${entity.name}action").getValue()
 									}
 								});
@@ -202,11 +201,6 @@ Ext.onReady(function() {
 		]
 	});
 	${entity.name}grid.region = 'center';
-	${entity.name}store.on("beforeload",function(){ 
-		${entity.name}store.baseParams = {
-				query : Ext.getCmp("query${entity.name}action").getValue()
-		}; 
-	});
 	${entity.name}store.load();//加载数据
 	var win = new Ext.Viewport({//只能有一个viewport
 		resizable : true,
