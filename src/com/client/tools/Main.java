@@ -92,12 +92,16 @@ public class Main extends JFrame implements ActionListener
 		button.addActionListener(this);
 		this.pathField.setText("D:/autocode/zrldemo");
 		this.packageField.setText("com.server");
-		//this.connectionField.setText("jdbc:oracle:thin:@192.168.70.17:1521:WIGDBRD");
-		this.connectionField.setText("jdbc:oracle:thin:@127.0.0.1:1521:WIGDBRD");
-		this.dbName.setText("0");
-		this.userName.setText("ZRLDEMO");
-		this.password.setText("ZRLDEMO");
-		this.dict.setText("oracle.jdbc.driver.OracleDriver");
+		this.connectionField.setText("jdbc:mysql://127.0.0.1/information_schema");
+		this.dbName.setText("ZRL");
+		this.userName.setText("ROOT");
+		this.password.setText("ROOT");
+		this.dict.setText("MYSQL");
+//		this.connectionField.setText("jdbc:oracle:thin:@127.0.0.1:1521:WIGDBRD");
+//		this.dbName.setText("ORACLE");
+//		this.userName.setText("ZRLDEMO");
+//		this.password.setText("ZRLDEMO");
+//		this.dict.setText("ORACLE");
 	}
 	
 	
@@ -118,10 +122,7 @@ public class Main extends JFrame implements ActionListener
 		generator.create("poco","poco","Poco.java","poco.ftl");
 		generator.create("pojo","pojo",".java","pojo.ftl");
 		generator.create("dao","dao","Dao.java","dao.ftl");
-		if("0".equals(this.dbName.getText()))
-			generator.create("action","action","Action.java","action.ftl");
-		else
-			generator.create("action","action","Action.java","viewaction.ftl");
+		generator.create("action","action","Action.java","action.ftl");
 		generator.create("pages","pages",".jsp","jsp.ftl");
 		generator.create("pages","pages",".js","js.ftl");
 	}

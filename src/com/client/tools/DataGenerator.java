@@ -36,25 +36,116 @@ public class DataGenerator
 		this.password = password;
 		this.entities = new ArrayList<Entity>();		
 	}
-	
+	public void loadFromDbMetasformysql()
+	{
+		Connection con = null;
+		PreparedStatement statement = null;
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			this.dbName = dbName.toLowerCase();
+			this.userName = userName.toLowerCase();
+			this.password = password.toLowerCase();
+			con = DriverManager.getConnection(this.dbConnectionString, this.userName, this.password);
+			//con = DriverManager.getConnection(this.dbConnectionString, "root", "x5");
+			statement = con.prepareStatement("select table_name from tables where TABLE_SCHEMA='" + this.dbName + "'");
+			ResultSet set = statement.executeQuery();
+			while(set.next())
+			{
+				String tableName = set.getString("table_name");
+				String className = tableName.toLowerCase();
+				
+				Entity entity = new Entity(className);
+				entity.setChineseName(this.map.get(tableName.toLowerCase()));
+				this.entities.add(entity);
+				statement = con.prepareStatement("select * from columns where table_name='" + tableName + "' and table_schema='" + this.dbName + "'");
+				ResultSet set2 = statement.executeQuery();
+				List<Column> columns = new ArrayList<Column>();
+				entity.setColumns(columns);
+				boolean begin = true;
+				while(set2.next())
+				{
+					Column column = new Column(set2.getString("column_name"));
+					column.setChineseName(set2.getString("Column_comment"));
+					column.setIs_nullable(set2.getString("is_nullable"));
+					column.setCharacter_maximum_length(set2.getInt("Character_maximum_length"));
+					column.setColumn_comment(set2.getString("Column_comment"));
+					column.setColumn_default(set2.getString("Column_default"));
+					column.setColumn_type(set2.getString("Column_type"));
+					String v = set2.getString("column_key");
+					column.setColumn_key(v);
+					column.setData_type(set2.getString("data_type"));
+					
+					if(begin){
+						column.setPrimaryKey(true);
+						entity.setKeyColumn(column);//key column单独分开
+						begin =false;
+					}
+					else
+					{
+						columns.add(column);
+					}
+					//column.setNumberic_precision(set2.getBigDecimal("Numberic_precision").longValue());
+					//column.setNumberic_scale(set2.getBigDecimal("Numberic_scale").longValue());
+					
+				}
+				set2.close();
+			}		
+			set.close();			
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		finally
+		{
+			if (con != null)
+			{
+				try
+				{
+					con.close();
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+			if (statement != null)
+			{
+				try
+				{
+					statement.close();
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				
+			}
+		}
+		
+	}
 	public void loadFromDbMetas()
 	{
+		if(this.dictionaryPath.equals("MYSQL")) {
+			loadFromDbMetasformysql();
+			return;
+		}
 		//initDictionary();//中文对照
 		Connection con = null;
 		PreparedStatement statement = null;
 		try
 		{
-			//Class.forName("oracle.jdbc.driver.OracleDriver");
-			Class.forName(this.dictionaryPath);
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			this.dbName = dbName.toUpperCase();
+			this.userName = userName.toUpperCase();
+			this.password = password.toUpperCase();
 			con = DriverManager.getConnection(this.dbConnectionString, this.userName, this.password);
 			//con = DriverManager.getConnection(this.dbConnectionString, "root", "x5");
-			String sqltables = "";
-			if("0".equals(this.dbName))
-				sqltables = "select b.* from all_tables a left join user_tab_comments b on a.table_name = b.table_name" +
-					" where owner='" + this.userName + "'";
-			else
-				sqltables = "select b.* from all_views a left join user_tab_comments b on a.view_name = b.table_name" +
-						" where owner='" + this.userName + "'";
+			String sqltables = "(select b.* from all_tables a left join user_tab_comments b on a.table_name = b.table_name" +
+					" where owner='" + this.userName + "')" + 
+					" union all (select b.* from all_views a left join user_tab_comments b on a.view_name = b.table_name" +
+					" where owner='" + this.userName + "')";
 			statement = con.prepareStatement(sqltables);
 			//statement = con.prepareStatement("select table_name from tables where TABLE_SCHEMA='" + this.dbName + "'");
 			ResultSet set = statement.executeQuery();
