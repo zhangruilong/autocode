@@ -143,11 +143,11 @@ public class Column
 	public String getDataType()
 	{
 		String columnType = this.column_type;
-		if (columnType.startsWith("number"))
+		if (columnType.startsWith("number")|| columnType.startsWith("decimal")|| columnType.startsWith("int"))
 		{
 			return "Integer";
 		}
-		else if (columnType.startsWith("nvarchar2")|| columnType.startsWith("varchar2")|| columnType.startsWith("char"))
+		else if (columnType.startsWith("nvarchar2")|| columnType.startsWith("varchar2")|| columnType.startsWith("char")|| columnType.startsWith("varchar"))
 		{
 			return "String";
 		}
