@@ -8,7 +8,7 @@ Ext.onReady(function() {
 	        			    </#list>
 	        			      ];// 全部字段
 	var ${entity.name}keycolumn = [ '${entity.keyColumn.fieldName}' ];// 主键
-	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selAll");// 定义${entity.name}store
+	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selLimit");// 定义${entity.name}store
 	var ${entity.name}dataForm = Ext.create('Ext.form.Panel', {// 定义新增和修改的FormPanel
 		id:'${entity.name}dataForm',
 		labelAlign : 'right',

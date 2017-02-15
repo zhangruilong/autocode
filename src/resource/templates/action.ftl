@@ -90,4 +90,11 @@ public class ${entity.name}Action extends BaseActionDao {
 		result = CommonConst.GSON.toJson(pageinfo);
 		responsePW(response, result);
 	}
+	//查询LIMIT条
+	public void selLimit(HttpServletRequest request, HttpServletResponse response){
+		Queryinfo queryinfo = getQueryinfo(request, ${entity.name}.class, ${entity.name}Poco.QUERYFIELDNAME, ${entity.name}Poco.ORDER, TYPE，CommonConst.LIMIT);
+		Pageinfo pageinfo = new Pageinfo(CommonConst.LIMIT, selQuery(queryinfo));
+		result = CommonConst.GSON.toJson(pageinfo);
+		responsePW(response, result);
+	}
 }
