@@ -143,27 +143,34 @@ public class Column
 	public String getDataType()
 	{
 		String columnType = this.column_type;
-		if (columnType.startsWith("number")|| columnType.startsWith("decimal")|| columnType.startsWith("int"))
+		if (columnType.contains("numeric")|| columnType.equals("decimal"))
+		{
+			return "BigDecimal";
+		}else if (columnType.contains("num")|| columnType.contains("int"))
 		{
 			return "Integer";
 		}
-		else if (columnType.startsWith("nvarchar2")|| columnType.startsWith("varchar2")|| columnType.startsWith("char")|| columnType.startsWith("varchar"))
+		else if (columnType.contains("char")|| columnType.contains("text"))
 		{
 			return "String";
 		}
-		else if (columnType.startsWith("date"))
+		else if (columnType.equals("date")|| columnType.contains("time"))
 		{
-			return "Date";
+			return "Timestamp";
 		}
-		else if (columnType.startsWith("float"))
+		else if (columnType.contains("real"))
 		{
 			return "Float";
 		}
-		else if (columnType.startsWith("double"))
+		else if (columnType.contains("float")|| columnType.contains("double"))
 		{
 			return "Double";
 		}
-		else if (columnType.startsWith("long"))
+		else if (columnType.contains("binary"))
+		{
+			return "byte[]";
+		}
+		else if (columnType.equals("long")|| columnType.equals("bigint"))
 		{
 			return "Long";
 		}
