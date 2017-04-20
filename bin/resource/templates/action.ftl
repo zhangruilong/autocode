@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+//import org.apache.solr.common.SolrDocumentList;
 import ${package}.pojo.${entity.name};
 import ${package}.poco.${entity.name}Poco;
 import com.system.tools.CommonConst;
@@ -14,6 +14,7 @@ import com.system.tools.pojo.Fileinfo;
 import com.system.tools.pojo.Queryinfo;
 import com.system.tools.util.CommonUtil;
 import com.system.tools.util.FileUtil;
+import com.system.tools.util.TypeUtil;
 import com.system.tools.pojo.Pageinfo;
 
 /**
@@ -21,7 +22,6 @@ import com.system.tools.pojo.Pageinfo;
  *@author ZhangRuiLong
  */
 public class ${entity.name}Action extends BaseActionDao {
-	public String result = CommonConst.FAILURE;
 	public ArrayList<${entity.name}> cuss = null;
 	public Type TYPE = new TypeToken<ArrayList<${entity.name}>>() {}.getType();
 
@@ -35,6 +35,7 @@ public class ${entity.name}Action extends BaseActionDao {
 			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}()))
 				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
 			result = insSingle(temp);
+//			if(CommonConst.SUCCESS.equals(result)) updSolr(temp);
 		}
 		responsePW(response, result);
 	}
@@ -45,6 +46,7 @@ public class ${entity.name}Action extends BaseActionDao {
 		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
 			result = delSingle(temp,${entity.name}Poco.KEYCOLUMN);
+//			if(CommonConst.SUCCESS.equals(result)) delSolr(temp,${entity.name}Poco.KEYCOLUMN);
 		}
 		responsePW(response, result);
 	}
@@ -54,7 +56,11 @@ public class ${entity.name}Action extends BaseActionDao {
 		System.out.println("json : " + json);
 		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
-			result = updSingle(temp,${entity.name}Poco.KEYCOLUMN);
+			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}())){
+				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
+				result = insSingle(temp);
+			}else result = updSingle(temp,${entity.name}Poco.KEYCOLUMN);
+//			if(CommonConst.SUCCESS.equals(result)) updSolr(temp);
 		}
 		responsePW(response, result);
 	}
@@ -90,4 +96,19 @@ public class ${entity.name}Action extends BaseActionDao {
 		result = CommonConst.GSON.toJson(pageinfo);
 		responsePW(response, result);
 	}
+	//查询LIMIT条
+	public void selLimit(HttpServletRequest request, HttpServletResponse response){
+		Queryinfo queryinfo = getQueryinfo(request, ${entity.name}.class, ${entity.name}Poco.QUERYFIELDNAME, ${entity.name}Poco.ORDER, TYPE, CommonConst.LIMIT);
+		Pageinfo pageinfo = new Pageinfo(0, selQuery(queryinfo));
+		result = CommonConst.GSON.toJson(pageinfo);
+		responsePW(response, result);
+	}
+	//solr查询
+//	public void selSolr(HttpServletRequest request, HttpServletResponse response){
+//		Queryinfo queryinfo = getSolrquery(request, ${entity.name}.class, ${entity.name}Poco.QUERYFIELDNAME, ${entity.name}Poco.ORDER, TYPE);
+//		SolrDocumentList solrDocumentList = selSolr(queryinfo);
+//		Pageinfo pageinfo = new Pageinfo(TypeUtil.stringToInt(""+solrDocumentList.getNumFound()), solrDocumentList);
+//		result = CommonConst.GSON.toJson(pageinfo);
+//       responsePW(response, result);
+//    } 
 }

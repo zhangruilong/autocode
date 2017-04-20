@@ -1,6 +1,7 @@
 package ${package}.pojo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.math.BigDecimal;
 /**
  * ${entity.chineseName} 实体类
  *@author ZhangRuiLong

@@ -8,46 +8,44 @@ Ext.onReady(function() {
 	        			    </#list>
 	        			      ];// 全部字段
 	var ${entity.name}keycolumn = [ '${entity.keyColumn.fieldName}' ];// 主键
-	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selLimit");// 定义${entity.name}store
+	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selQuery");// 定义${entity.name}store
 	var ${entity.name}dataForm = Ext.create('Ext.form.Panel', {// 定义新增和修改的FormPanel
 		id:'${entity.name}dataForm',
 		labelAlign : 'right',
 		frame : true,
 		layout : 'column',
 		items : [ {
-			columnWidth : 1,
+			columnWidth : .5,
 			layout : 'form',
 			items : [ {
 				xtype : 'textfield',
 				fieldLabel : '${entity.keyColumn.chineseName}',
 				id : '${entity.name}${entity.keyColumn.fieldName}',
-				name : '${entity.keyColumn.fieldName}',
-				maxLength : 100
+				name : '${entity.keyColumn.fieldName}'
 			} ]
 		}
 		<#list entity.columns as column>
 		, {
-			columnWidth : 1,
+			columnWidth : .5,
 			layout : 'form',
 			items : [ {
 				xtype : 'textfield',
 				fieldLabel : '${column.chineseName}',
 				id : '${entity.name}${column.fieldName}',
-				name : '${column.fieldName}',
-				maxLength : 100
+				name : '${column.fieldName}'
 			} ]
 		}
 		</#list>
 		]
 	});
 	
-	//var ${entity.name}bbar = pagesizebar(${entity.name}store);//定义分页
+	var ${entity.name}bbar = pagesizebar(${entity.name}store);//定义分页
 	var ${entity.name}grid =  Ext.create('Ext.grid.Panel', {
 		height : document.documentElement.clientHeight - 4,
 		width : '100%',
 		//title : ${entity.name}title,
 		store : ${entity.name}store,
-		//bbar : ${entity.name}bbar,
+		bbar : ${entity.name}bbar,
 	    selModel: {
 	        type: 'checkboxmodel'
 	    },
@@ -180,20 +178,14 @@ Ext.onReady(function() {
 				listeners : {
 					specialkey : function(field, e) {
 						if (e.getKey() == Ext.EventObject.ENTER) {
-							if ("" == Ext.getCmp("query${entity.name}action").getValue()) {
-								${entity.name}store.load({
+							${entity.name}store.load({
 									params : {
-										json : queryjson
-									}
-								});
-							} else {
-								${entity.name}store.load({
-									params : {
+										start : 0,
+										limit : PAGESIZE,
 										json : queryjson,
 										query : Ext.getCmp("query${entity.name}action").getValue()
 									}
-								});
-							}
+							});
 						}
 					}
 				}
