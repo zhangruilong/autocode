@@ -30,7 +30,7 @@ public class ${entity.name}Action extends BaseActionDao {
 		String json = request.getParameter("json");
 		System.out.println("json : " + json);
 		json = json.replace("\"\"", "null");
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
+		if(!CommonUtil.isNull(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
 			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}()))
 				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
@@ -43,7 +43,7 @@ public class ${entity.name}Action extends BaseActionDao {
 	public void delAll(HttpServletRequest request, HttpServletResponse response){
 		String json = request.getParameter("json");
 		System.out.println("json : " + json);
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
+		if(!CommonUtil.isNull(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
 			result = delSingle(temp,${entity.name}Poco.KEYCOLUMN);
 //			if(CommonConst.SUCCESS.equals(result)) delSolr(temp,${entity.name}Poco.KEYCOLUMN);
@@ -54,7 +54,7 @@ public class ${entity.name}Action extends BaseActionDao {
 	public void updAll(HttpServletRequest request, HttpServletResponse response){
 		String json = request.getParameter("json");
 		System.out.println("json : " + json);
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
+		if(!CommonUtil.isNull(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
 			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}())){
 				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
@@ -68,7 +68,7 @@ public class ${entity.name}Action extends BaseActionDao {
 	public void impAll(HttpServletRequest request, HttpServletResponse response){
 		Fileinfo fileinfo = FileUtil.upload(request,0,null,${entity.name}Poco.NAME,"impAll");
 		String json = FileUtil.impExcel(fileinfo.getPath(),${entity.name}Poco.FIELDNAME); 
-		if(CommonUtil.isNotEmpty(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
+		if(!CommonUtil.isNull(json)) cuss = CommonConst.GSON.fromJson(json, TYPE);
 		for(${entity.name} temp:cuss){
 			if(CommonUtil.isNull(temp.get${entity.keyColumn.name}()))
 				temp.set${entity.keyColumn.name}(CommonUtil.getNewId());
