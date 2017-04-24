@@ -189,6 +189,19 @@ Ext.onReady(function() {
 						}
 					}
 				}
+			},{
+				text : "查询",
+				xtype: 'button',
+				handler : function() {
+					${entity.name}store.load({
+							params : {
+								start : 0,
+								limit : PAGESIZE,
+								json : queryjson,
+								query : Ext.getCmp("query${entity.name}action").getValue()
+							}
+					});
+				}
 			}
 		]
 	});
