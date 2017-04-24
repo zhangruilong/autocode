@@ -40,7 +40,40 @@ public class FreeMarkerGenerator{
 			}
 		}
 	}
-	
+	public void generateAbfConfigXml(List<Entity> entity, String packageName, String outputPath, String outputfilename,String templatefilename) {		
+		init();
+		SimpleHash root = new SimpleHash();
+		root.put("package",packageName);//temp
+		root.put("entity", entity);		
+		Date date = new Date(System.currentTimeMillis());
+		String ds = "2016-" + (date.getMonth() + 1) + "-" + date.getDate();
+		root.put("date", ds);
+		try
+		{
+			Template template = configuration.getTemplate(templatefilename, "UTF-8");
+			File directory = new File(outputPath);
+			if (!directory.exists())
+			{
+				directory.mkdirs();
+			}
+			File file = new File(outputPath + "/" + outputfilename);
+			System.out.println(outputfilename);
+			if (file.exists())
+			{
+				file.delete();
+			}
+			FileOutputStream stream = new FileOutputStream(file);
+			Writer writer = new OutputStreamWriter(stream, "UTF-8");
+			template.process(root, writer);
+			writer.flush();			
+			stream.close();
+			writer.close();			
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 	public void generate(Entity entity, String packageName, String outputPath, String outputfilename,String templatefilename) {		
 		init();
 		SimpleHash root = new SimpleHash();

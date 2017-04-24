@@ -119,9 +119,10 @@ public class Main extends JFrame implements ActionListener
 	{
 		this.generator = new DataGenerator(this.dict.getText(), this.packageField.getText(), this.pathField.getText(), this.connectionField.getText(), this.dbName.getText(), this.userName.getText(), this.password.getText());
 		generator.loadFromDbMetas();
+		generator.createAbfConfigXml("xml","xml","abf.config.xml","abf.config.xml.ftl");
 		generator.create("poco","poco","Poco.java","poco.ftl");
 		generator.create("pojo","pojo",".java","pojo.ftl");
-		generator.create("dao","dao","Dao.java","dao.ftl");
+		generator.create("service","service","Service.java","service.ftl");
 		generator.create("action","action","Action.java","action.ftl");
 		generator.create("pages","pages",".jsp","jsp.ftl");
 		generator.create("pages","pages",".js","js.ftl");

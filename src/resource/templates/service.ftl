@@ -1,70 +1,27 @@
-package com.fh.service.server.goods;
+package ${package}.service;
 
-import java.util.List;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+//import org.apache.solr.common.SolrDocumentList;
+import ${package}.pojo.${entity.name};
+import ${package}.poco.${entity.name}Poco;
+import ${package}.action.${entity.name}Action;
+import com.system.tools.CommonConst;
+import com.system.tools.base.BaseActionDao;
+import com.system.tools.pojo.Fileinfo;
+import com.system.tools.pojo.Queryinfo;
+import com.system.tools.util.CommonUtil;
+import com.system.tools.util.FileUtil;
+import com.system.tools.util.TypeUtil;
+import com.system.tools.pojo.Pageinfo;
 
-import javax.annotation.Resource;
+/**
+ * ${entity.chineseName} 服务层
+ *@author ZhangRuiLong
+ */
+public class ${entity.name}Service extends ${entity.name}Action {
 
-import org.springframework.stereotype.Service;
-
-import com.fh.dao.DaoSupport;
-import com.fh.entity.Page;
-import com.fh.util.PageData;
-
-
-@Service("goodsService")
-public class GoodsService {
-
-	@Resource(name = "daoSupport")
-	private DaoSupport dao;
-	
-	/*
-	* 新增
-	*/
-	public void save(PageData pd)throws Exception{
-		dao.save("GoodsMapper.save", pd);
-	}
-	
-	/*
-	* 删除
-	*/
-	public void delete(PageData pd)throws Exception{
-		dao.delete("GoodsMapper.delete", pd);
-	}
-	
-	/*
-	* 修改
-	*/
-	public void edit(PageData pd)throws Exception{
-		dao.update("GoodsMapper.edit", pd);
-	}
-	
-	/*
-	*列表
-	*/
-	public List<PageData> list(Page page)throws Exception{
-		return (List<PageData>)dao.findForList("GoodsMapper.datalistPage", page);
-	}
-	
-	/*
-	*列表(全部)
-	*/
-	public List<PageData> listAll(PageData pd)throws Exception{
-		return (List<PageData>)dao.findForList("GoodsMapper.listAll", pd);
-	}
-	
-	/*
-	* 通过id获取数据
-	*/
-	public PageData findById(PageData pd)throws Exception{
-		return (PageData)dao.findForObject("GoodsMapper.findById", pd);
-	}
-	
-	/*
-	* 批量删除
-	*/
-	public void deleteAll(String[] ArrayDATA_IDS)throws Exception{
-		dao.delete("GoodsMapper.deleteAll", ArrayDATA_IDS);
-	}
-	
 }
-

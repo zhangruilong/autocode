@@ -1,7 +1,7 @@
 Ext.onReady(function() {
 	var ${entity.name}classify = "${entity.chineseName}";
 	var ${entity.name}title = "当前位置:业务管理》" + ${entity.name}classify;
-	var ${entity.name}action = "${entity.name}Action.do";
+	var ${entity.name}action = "${entity.name}Service.do";
 	var ${entity.name}fields = ['${entity.keyColumn.fieldName}'
 	               			<#list entity.columns as column>
 	        			    ,'${column.fieldName}' 

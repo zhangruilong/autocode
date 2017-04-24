@@ -48,7 +48,10 @@ public class DataGenerator
 			this.password = password.toLowerCase();
 			con = DriverManager.getConnection(this.dbConnectionString, this.userName, this.password);
 			//con = DriverManager.getConnection(this.dbConnectionString, "root", "x5");
-			statement = con.prepareStatement("select table_name from tables where TABLE_SCHEMA='" + this.dbName + "'");
+			//去除系统表的版本
+			statement = con.prepareStatement("select table_name from tables where TABLE_SCHEMA='" + this.dbName 
+					+ "' and table_name not like 'system_%' and table_name not like 'om_%' and table_name not like 'cms_%'");
+			//statement = con.prepareStatement("select table_name from tables where TABLE_SCHEMA='" + this.dbName + "'");
 			ResultSet set = statement.executeQuery();
 			while(set.next())
 			{
@@ -244,7 +247,11 @@ public class DataGenerator
 		}
 		
 	}
-	
+	public void createAbfConfigXml(String packageName,String savePath,String outputfilename,String templatefilename)
+	{
+		FreeMarkerGenerator freemarker = new FreeMarkerGenerator();
+		freemarker.generateAbfConfigXml(entities, this.packageName, this.savePath + "/"+savePath, outputfilename, templatefilename);
+	}
 	public void create(String packageName,String savePath,String outputfilename,String templatefilename)
 	{
 		if(savePath.endsWith("pages")){
