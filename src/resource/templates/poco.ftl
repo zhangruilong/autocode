@@ -9,19 +9,19 @@ public class ${entity.name}Poco
    /**
     * 实体中文名
     */
-   public static String NAME = "${entity.chineseName}";
+   public static final String NAME = "${entity.chineseName}";
    /**
     * 实体表名
     */
-   public static String TABLE = "${entity.name}";
+   public static final String TABLE = "${entity.name}";
    /**
     * 实体主键
     */
-   public static String[] KEYCOLUMN = {"${entity.keyColumn.fieldName}"};
+   public static final String[] KEYCOLUMN = {"${entity.keyColumn.fieldName}"};
    /**
     * 实体中文字段
     */
-   public static String[] CHINESENAME = {
+   public static final String[] CHINESENAME = {
    		"${entity.keyColumn.chineseName}",
 	<#list entity.columns as column>
 	 	"${column.chineseName}",
