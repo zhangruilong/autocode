@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 	<bean id="404" class="com.system.tools.base.HandlerFor404" />
-	<bean id="BaseAction" class="com.system.tools.base.BaseAction" />
 	<bean id="System_userAction" class="com.system.action.more.System_userAction" />
 	<bean id="System_powerAction" class="com.system.action.more.System_powerAction" />
 	<bean id="System_powerviewAction" class="com.system.action.System_powerviewAction" />

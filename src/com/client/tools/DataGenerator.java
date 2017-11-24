@@ -69,7 +69,11 @@ public class DataGenerator
 				while(set2.next())
 				{
 					Column column = new Column(set2.getString("column_name"));
-					column.setChineseName(set2.getString("Column_comment"));
+					String str = set2.getString("Column_comment");
+					if(null == str || str.length() <= 0 || "null".equals(str.toLowerCase()) || "undefined".equals(str.toLowerCase()))
+						column.setChineseName(set2.getString("column_name"));
+					else
+						column.setChineseName(set2.getString("Column_comment"));
 					column.setIs_nullable(set2.getString("is_nullable"));
 					//column.setCharacter_maximum_length(set2.getInt("Character_maximum_length"));
 					column.setColumn_comment(set2.getString("Column_comment"));

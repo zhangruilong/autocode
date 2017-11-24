@@ -1,14 +1,14 @@
 Ext.onReady(function() {
 	var ${entity.name}classify = "${entity.chineseName}";
 	var ${entity.name}title = "当前位置:业务管理》" + ${entity.name}classify;
-	var ${entity.name}action = "${entity.name}Service.do";
+	var ${entity.name}Service = "${entity.name}Service.do";
 	var ${entity.name}fields = ['${entity.keyColumn.fieldName}'
 	               			<#list entity.columns as column>
 	        			    ,'${column.fieldName}' 
 	        			    </#list>
 	        			      ];// 全部字段
 	var ${entity.name}keycolumn = [ '${entity.keyColumn.fieldName}' ];// 主键
-	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}action + "?method=selQuery");// 定义${entity.name}store
+	var ${entity.name}store = dataStore(${entity.name}fields, basePath + ${entity.name}Service + "?method=selQuery");// 定义${entity.name}store
 	var ${entity.name}dataForm = Ext.create('Ext.form.Panel', {// 定义新增和修改的FormPanel
 		id:'${entity.name}dataForm',
 		labelAlign : 'right',
@@ -80,7 +80,7 @@ Ext.onReady(function() {
 				handler : function() {
 					${entity.name}dataForm.form.reset();
 					Ext.getCmp("${entity.name}${entity.keyColumn.fieldName}").setEditable (true);
-					createTextWindow(basePath + ${entity.name}action + "?method=insAll", "新增", ${entity.name}dataForm, ${entity.name}store);
+					createTextWindow(basePath + ${entity.name}Service + "?method=insAll", "新增", ${entity.name}dataForm, ${entity.name}store);
 				}
 			},'-',{
 				text : Ext.os.deviceType === 'Phone' ? null : "保存",
@@ -91,7 +91,7 @@ Ext.onReady(function() {
 						Ext.Msg.alert('提示', '请至少选择一条数据！');
 						return;
 					}
-					commonSave(basePath + ${entity.name}action + "?method=updAll",selections);
+					commonSave(basePath + ${entity.name}Service + "?method=updAll",selections);
 				}
 			},'-',{
 				text : Ext.os.deviceType === 'Phone' ? null : "修改",
@@ -105,7 +105,7 @@ Ext.onReady(function() {
 					}
 					${entity.name}dataForm.form.reset();
 					Ext.getCmp("${entity.name}${entity.keyColumn.fieldName}").setEditable (false);
-					createTextWindow(basePath + ${entity.name}action + "?method=updAll", "修改", ${entity.name}dataForm, ${entity.name}store);
+					createTextWindow(basePath + ${entity.name}Service + "?method=updAll", "修改", ${entity.name}dataForm, ${entity.name}store);
 					${entity.name}dataForm.form.loadRecord(selections[0]);
 				}
 			},'-',{
@@ -124,13 +124,13 @@ Ext.onReady(function() {
 	        						Ext.Msg.alert('提示', '请至少选择一条数据！');
 	        						return;
 	        					}
-	        					commonDelete(basePath + ${entity.name}action + "?method=delAll",selections,${entity.name}store,${entity.name}keycolumn);
+	        					commonDelete(basePath + ${entity.name}Service + "?method=delAll",selections,${entity.name}store,${entity.name}keycolumn);
 	        				}
 	                    },{
 	                    	text : "导入",
 	        				iconCls : 'imp',
 	        				handler : function() {
-	        					commonImp(basePath + ${entity.name}action + "?method=impAll","导入",${entity.name}store);
+	        					commonImp(basePath + ${entity.name}Service + "?method=impAll","导入",${entity.name}store);
 	        				}
 	                    },{
 	                    	text : "导出",
@@ -138,7 +138,7 @@ Ext.onReady(function() {
 	        				handler : function() {
 	        					Ext.Msg.confirm('请确认', '<b>提示:</b>请确认要导出当前数据？', function(btn, text) {
 	        						if (btn == 'yes') {
-	        							window.location.href = basePath + ${entity.name}action + "?method=expAll&json="+queryjson+"&query="+Ext.getCmp("query${entity.name}action").getValue(); 
+	        							window.location.href = basePath + ${entity.name}Service + "?method=expAll&json="+queryjson+"&query="+Ext.getCmp("query${entity.name}Service").getValue(); 
 	        						}
 	        					});
 	        				}
@@ -163,14 +163,14 @@ Ext.onReady(function() {
     						iconCls : 'select',
     						handler : function() {
     							Ext.getCmp("${entity.name}${entity.keyColumn.fieldName}").setEditable (true);
-    							createQueryWindow("筛选", ${entity.name}dataForm, ${entity.name}store,Ext.getCmp("query${entity.name}action").getValue());
+    							createQueryWindow("筛选", ${entity.name}dataForm, ${entity.name}store,Ext.getCmp("query${entity.name}Service").getValue());
     						}
     					}]
 	                }
 	            }
 			},'->',{
 				xtype : 'textfield',
-				id : 'query${entity.name}action',
+				id : 'query${entity.name}Service',
 				name : 'query',
 				emptyText : '模糊匹配',
 				width : 100,
@@ -183,7 +183,7 @@ Ext.onReady(function() {
 										start : 0,
 										limit : PAGESIZE,
 										json : queryjson,
-										query : Ext.getCmp("query${entity.name}action").getValue()
+										query : Ext.getCmp("query${entity.name}Service").getValue()
 									}
 							});
 						}
@@ -198,7 +198,7 @@ Ext.onReady(function() {
 								start : 0,
 								limit : PAGESIZE,
 								json : queryjson,
-								query : Ext.getCmp("query${entity.name}action").getValue()
+								query : Ext.getCmp("query${entity.name}Service").getValue()
 							}
 					});
 				}
@@ -206,6 +206,12 @@ Ext.onReady(function() {
 		]
 	});
 	${entity.name}grid.region = 'center';
+	${entity.name}store.on("beforeload",function(){ 
+		${entity.name}store.getProxy().extraParams = {
+				json : queryjson,
+				query : Ext.getCmp("query${entity.name}Service").getValue()
+		}; 
+	});
 	${entity.name}store.load();//加载数据
 	var win = new Ext.Viewport({//只能有一个viewport
 		resizable : true,
